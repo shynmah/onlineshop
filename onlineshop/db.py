@@ -34,7 +34,7 @@ cursor.execute("INSERT INTO products VALUES(14, 'Western Digital 1Tr', 'accessor
 cursor.execute("INSERT INTO products VALUES(15, 'Mi Powerbank', 'accessories', 100)")
 
 
-cursor.execute("""CREATE TABLE IF NOT EXISTS orders(user_id INTEGER, product_id INTEGER, quantity INTEGER NOT NULL, total_price INTEGER NOT NULL, created DATE ******, 
+cursor.execute("""CREATE TABLE IF NOT EXISTS orders(user_id INTEGER, product_id INTEGER, quantity INTEGER NOT NULL, total_price INTEGER NOT NULL, created DATE DEFAULT (DATE(CURRENT_DATE)), 
                 FOREIGN KEY(user_id) REFERENCES users(user_id), FOREIGN KEY(product_id) REFERENCES products(product_id))""")
 
 connector.commit()
