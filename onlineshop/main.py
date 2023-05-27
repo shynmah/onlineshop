@@ -1,5 +1,6 @@
 import sqlite3
 from logo import logo
+import datetime
 
 
 def connection(path):
@@ -74,16 +75,32 @@ def mainpage():
         mainpage()
 
 
+
 def products(connector, cursor):
     print("avalible categories: phones - laptops - accessories")
     category = input("choose a category: ")
     if category:
-        statement = f"SELECT name, price FROM products WHERE category='{category}' "
+        statement = f"SELECT product_id, name, price FROM products WHERE category='{category}' "
         products = cursor.execute(statement)
         print(list(products))
+        Q = input("type 1 if you want to add prooducts to your cart: ")
+        if Q == "1":
+            product_id = input("enter a product id: ")
+            price = f"SELECT price FROM products WHERE product_id={product_id}"
+            cursor.execute(price)
+            price2 = price[0]
+            quantity = input("quantity: ")
+            cursor.execute(f"INSERT INTO products VALUES(1, product_id={product_id}, price={price2}, quantity={quantity})")
+            connector.commit()
+            print("priduct added successfully")
+        else:
+            print("**command is wrong**")
+            mainpage()
     else:
         print("**command is wrong**")
         mainpage()
+
+
 
 def profile(connector, cursor):
     statement = f"SELECT username, password FROM users WHERE user_id='{str_user_id}' "

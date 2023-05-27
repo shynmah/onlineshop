@@ -3,7 +3,9 @@ import sqlite3
 connector = sqlite3.connect("data.db")
 cursor = connector.cursor()
 
-cursor.execute("CREATE TABLE IF NOT EXISTS users(user_id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL UNIQUE, password TEXT NOT NULL)")
+
+
+cursor.execute("CREATE TABLE IF NOT EXISTS users(user_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL UNIQUE, password TEXT NOT NULL)")
 
 cursor.execute("INSERT INTO users VALUES(1, 'admin', 'admin')")
 cursor.execute("INSERT INTO users VALUES(2, 'AmirAndouhgin', 'amir')")
@@ -13,7 +15,7 @@ cursor.execute("INSERT INTO users VALUES(5, 'RezaKaido', 'reza')")
 
 
 
-cursor.execute("CREATE TABLE IF NOT EXISTS products(product_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, category TEXT NOT NULL, price INTEGER NOT NULL)")
+cursor.execute("CREATE TABLE IF NOT EXISTS products(product_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, category TEXT NOT NULL, price INTEGER NOT NULL)")
 
 cursor.execute("INSERT INTO products VALUES(1, 'Iphone 14', 'phones',  1000)")
 cursor.execute("INSERT INTO products VALUES(2, 'Samsung S23', 'phones',  800)")
@@ -34,8 +36,28 @@ cursor.execute("INSERT INTO products VALUES(14, 'Western Digital 1Tr', 'accessor
 cursor.execute("INSERT INTO products VALUES(15, 'Mi Powerbank', 'accessories', 100)")
 
 
-cursor.execute("""CREATE TABLE IF NOT EXISTS orders(user_id INTEGER, product_id INTEGER, quantity INTEGER NOT NULL, total_price INTEGER NOT NULL, created DATE DEFAULT (DATE(CURRENT_DATE)), 
-                FOREIGN KEY(user_id) REFERENCES users(user_id), FOREIGN KEY(product_id) REFERENCES products(product_id))""")
+
+# cursor.execute("""CREATE TABLE IF NOT EXISTS orders( order_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
+#                                                      user_id INTEGER, 
+#                                                      is_paid INTEGER NOT NULL DEFAULT 0 CHECK(is_paid IN (0,1)),
+#                                                      created DATE DEFAULT (DATE(CURRENT_DATE)), 
+#                                                      FOREIGN KEY(user_id) REFERENCES users(user_id) )""")
+
+# cursor.execute("""CREATE TABLE IF NOT EXISTS cart(cart_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
+#                                                   order_id INTEGER, 
+#                                                   product_id INTEGER, 
+#                                                   price REAL NOT NULL, 
+#                                                   quantity INTEGER NOT NULL, 
+#                                                   total_price REAL AS (price * quantity),
+#                                                   FOREIGN KEY(order_id) REFERENCES orders(order_id), 
+#                                                   FOREIGN KEY(product_id) REFERENCES products(product_id) )""")
+
+cursor.execute("""CREATE TABLE IF NOT EXISTS cart(cart_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
+                                                   product_id INTEGER, 
+                                                   price REAL NOT NULL, 
+                                                   quantity INTEGER NOT NULL, 
+                                                   total_price REAL AS (price * quantity),
+                                                   FOREIGN KEY(product_id) REFERENCES products(product_id) )""")
 
 connector.commit()
 
