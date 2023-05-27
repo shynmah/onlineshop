@@ -82,15 +82,6 @@ def products(connector, cursor):
 def profile(connector, cursor):
     statement = f"SELECT username, password FROM users WHERE category='{category}' "
 
-
-    
-
-
-
-
-
-
-
 if __name__ == "__main__":
     connector, cursor = connection('data.db')
     login(connector, cursor)
