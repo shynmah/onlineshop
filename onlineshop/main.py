@@ -62,6 +62,21 @@ def register(connector, cursor):
 
 def mainpage():
     logo()
+    if str_user_id == 1:
+        print("avalible commands: products - orders - profile - *add*")
+        command = input("type your command: ")
+        if command == "products":
+            products(connector, cursor)
+        elif command == "add":
+            add_product(connector, cursor)
+        elif command == "cart":
+            pass
+        elif command == "profile":
+            profile(connector, cursor)
+        else:
+            print("**command is wrong**")
+            mainpage()
+
     print("avalible commands: products - orders - profile")
     command = input("type your command: ")
     if command == "products":
@@ -90,9 +105,9 @@ def products(connector, cursor):
             cursor.execute(price)
             price2 = price[0]
             quantity = input("quantity: ")
-            cursor.execute(f"INSERT INTO products VALUES(1, product_id={product_id}, price={price2}, quantity={quantity})")
+            cursor.execute(f"INSERT INTO cart VALUES(1, product_id={product_id}, price={price2}, quantity={quantity})")
             connector.commit()
-            print("priduct added successfully")
+            print("item added successfully")
         else:
             print("**command is wrong**")
             mainpage()
@@ -100,6 +115,19 @@ def products(connector, cursor):
         print("**command is wrong**")
         mainpage()
 
+
+
+def add_product(connector, cursor):
+    name = input("name: ")
+    category = input("category: ")
+    price = input("price: ")
+    data_tuple = (name, category, price)
+    cursor.execute("INSERT INTO products (name, category, price) VALUES(?, ?, ?)", data_tuple)
+    connector.commit()
+    print("product added successfully")
+    mainpage()
+
+    
 
 
 def profile(connector, cursor):
