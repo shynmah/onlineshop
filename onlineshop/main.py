@@ -47,7 +47,7 @@ def register(connector, cursor):
         confirm_password = input("confirm your password: ")
         if new_password == confirm_password:
             data_tuple = (new_username, new_password)
-            cursor.execute("INSERT INTO users VALUES(?, ?)", data_tuple)
+            cursor.execute("INSERT INTO users (username, password) VALUES(?, ?)", data_tuple)
             connector.commit()
             print("you registerd successfully")
             login(connector, cursor)
@@ -63,12 +63,14 @@ def register(connector, cursor):
 def mainpage():
     logo()
     if str_user_id == 1:
-        print("avalible commands: products - orders - profile - *add*")
+        print("avalible commands: products - orders - profile - *add* - *remove*")
         command = input("type your command: ")
         if command == "products":
             products(connector, cursor)
         elif command == "add":
             add_product(connector, cursor)
+        elif command == "remove":
+            remove_product(connector, cursor)
         elif command == "cart":
             pass
         elif command == "profile":
@@ -127,7 +129,20 @@ def add_product(connector, cursor):
     print("product added successfully")
     mainpage()
 
-    
+
+def remove_product(connector, cursor):
+    name = input("name: ")
+    statement = f"SELECT * FROM products WHERE name='{name}'"
+    product = cursor.execute(statement)
+    connector.commit()
+    print(list(product))
+    Q = input("are you sure to remove it? (y/n) ")
+    if Q == "y":
+        cursor.execute(f"DELETE FROM products WHERE name='{name}'")
+        connector.commit()
+        print("product removed successfully")
+        mainpage()
+
 
 
 def profile(connector, cursor):
